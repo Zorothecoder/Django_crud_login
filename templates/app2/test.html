@@ -1,0 +1,132 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<style>
+
+	body{
+		background-color: #638CB8;
+	}
+
+	input{
+		width: 100%;
+		padding: 12px 20px;
+		margin: 8px 0;
+		box-sizing: border-box;
+	}
+
+	input::placeholder {
+	  color: #d3d3d3;
+	}
+
+	.submit{
+		background-color: #6BA3E8;
+	}
+
+	.center-column{
+		width:600px;
+		margin: 20px auto;
+		padding:20px;
+		background-color: #fff;
+		border-radius: 3px;
+		box-shadow: 6px 2px 30px 0px rgba(0,0,0,0.75);
+	}
+
+	.item-row{
+		background-color: #906abd;
+		margin: 10px;
+		padding: 20px;
+		border-radius: 3px;
+		color: #fff;
+		font-size: 16px;
+		box-shadow: 0px -1px 10px -4px rgba(0,0,0,0.75);
+	}
+
+	.btn-danger{
+		background-color: #ffae19;
+		border-color: #e59400;
+	}
+
+</style>
+
+<div class="center-column">
+
+	<form method="POST" action="/">
+		{% csrf_token %}
+		{% comment %} {{form.title}} {% endcomment %}
+		<input class="btn btn-info" type="submit" name="Create Task">
+	</form>
+
+	<div class="todo-list">
+
+	{% comment %} {% for task in tasks %} {% endcomment %}
+		<div class="item-row">
+			<a class="btn btn-sm btn-info" href="{% url 'update_task' task.id %}">Update</a>
+			<a class="btn btn-sm btn-danger" href="{% url 'delete' task.id %}">Delete</a>
+
+			{% comment %} {% if task.complete == True %} {% endcomment %}
+			{% comment %} <strike>{{task}}</strike> {% endcomment %}
+			{% comment %} {% else %} {% endcomment %}
+			{% comment %} <span>{{task}}</span> {% endcomment %}
+			{% comment %} {% endif %} {% endcomment %}
+		</div>
+	{% comment %} {% endfor %} {% endcomment %}
+	</div>
+</div>
+
+{% extends 'app2/base.html' %}
+
+{% block content %}
+<div class="container">
+
+    <!-- Forms  -->
+    <div class="row">
+        <div class="col col-8 offset-2">
+            <form method="post">
+                {% csrf_token %}
+                {{form.as_p}}
+                <input type="submit" value="Add" class="btn btn-primary">
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Dispalay Data -->
+    <br><br><br>
+    <h3 class="alert alert-warning text-center">Employee Records</h3>
+    <table class="table my-5">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Sno</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Password</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in data %}
+            <tr>
+                <th scope="row">{{i.id}}</th>
+                <td>{{i.name}}</td>
+                <td>{{i.email}}</td>
+                <td>{{i.password}}</td>
+                <td>
+                    <a href="{% url 'update' id=i.id %}">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                    <form action="{% url  'delete' i.id %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit">
+                            <i class="fa-solid fa-trash "></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+
+</div>
+{% endblock content %}
